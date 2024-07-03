@@ -30,7 +30,7 @@ func (p *Provider) init(ctx context.Context) {
 		p.Region = "us-east-1"
 	}
 	if p.MaxWaitDur == 0 {
-		p.MaxWaitDur = time.Minute
+		p.MaxWaitDur = time.Second * 10
 	}
 
 	opts := make([]func(*config.LoadOptions) error, 0)
@@ -380,7 +380,7 @@ func (p *Provider) applyChange(ctx context.Context, input *r53.ChangeResourceRec
 	// Wait for the RecordSetChange status to be "INSYNC"
 	waiter := r53.NewResourceRecordSetsChangedWaiter(p.client)
 	err = waiter.Wait(ctx, changeInput, p.MaxWaitDur)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "exceeded max wait time") {
 		return err
 	}
 
