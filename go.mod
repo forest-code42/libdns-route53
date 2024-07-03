@@ -1,4 +1,4 @@
-module github.com/libdns/route53
+module github.com/forest-code42/libdns-route53
 
 go 1.15
 
